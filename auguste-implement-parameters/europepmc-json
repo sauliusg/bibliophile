@@ -1,0 +1,31 @@
+#! /bin/bash
+
+serverURL=http://www.ebi.ac.uk
+resourcePATH=europepmc/webservices/rest/search
+request=query=crystal+structure
+pageSize=1000
+cursorMark='*'
+format=json
+
+options="&pageSize=$pageSize&format=$format"
+queryURL="$serverURL/$resourcePATH?$request$options"
+
+result="$(curl -sSL "$queryURL&cursorMark=$cursorMark")"
+echo "$result"
+cursorMark=$(echo "$result" \
+        | jq . | awk '/nextCursorMark/{print $2}' | sed 's/[",]//g')
+n=$(echo "$result" | jq . | awk '/hitCount/{print $2}' | sed 's/,//')
+
+j=$(expr $n / $pageSize) 
+if [ $(expr $n % $pageSize) -eq 0 ]
+then
+    j=$(expr $j - 1)
+fi
+
+for i in $(seq 1 $j) ;
+do
+    result="$(curl -sSL "$queryURL&cursorMark=$cursorMark")"
+    echo "$result"
+    cursorMark=$(echo "$result" \
+        | jq . | awk '/nextCursorMark/{print $2}' | sed 's/[",]//g')
+done
