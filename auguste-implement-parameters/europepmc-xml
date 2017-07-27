@@ -1,4 +1,41 @@
 #! /bin/bash
+#* Download bibliographies from Europe-PMC, output into an xml format.  
+#**
+
+set -ue
+
+while [ $# -gt 0 ]
+do
+    case $1 in
+        --version|--versio|--versi|--vers|--ver|--ve|--v)
+            echo $Id
+            exit
+            ;;
+        --help|--hel|--he|--h)     
+            awk '/#\*/,/#\*\*/ {
+                    sub("^ *#[*]?[*]?", ""); \
+                    gsub("\\$0","'$0'"); \
+                    print $0
+                }' $0 #'
+	        exit
+	        ;;
+        --options|--option)
+            echo "$0: '--options' is a place-holder; " \
+                 "please use '$0 --help' to get the list of available options."
+            exit 2
+            ;;
+        --search-term|--search)
+            SEARCH_TERM="$2"
+            shift 
+            ;;
+        -*) echo "$0: unknown option '$1'" >&2 ; exit 1 ;;
+        *)  FILES="$FILES '$1'" ;;
+    esac
+    shift
+done
+
+echo SEARCH_TERM=${SEARCH_TERM}
+exit 0
 
 serverURL=http://www.ebi.ac.uk
 resourcePATH=europepmc/webservices/rest/search
