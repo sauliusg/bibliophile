@@ -31,8 +31,10 @@ setvar BASENAME = "$(basename $0)"
 #**   $0 --options file1.inp files*.inp
 #**
 #** OPTIONS:
-#**  ...
-#**  --help                   print short help message (this message) and exit
+#**  
+#**  --search_terms    Add search terms (in quotes) as arguments
+#**   -s                      after this option
+#**  --help            Print short help message (this message) and exit
 while [ $# -gt 0 ]
 do
     case $1 in
@@ -46,26 +48,25 @@ do
                     gsub("\\$0","'$(basename $0)'"); \
                     print $0
                 }' $0
-    	    exit
-    	    ;;
+            exit
+            ;;
         --search_terms|--search_term|--search|--searc|--sear|--sea|--se|--s|-s)
-          SEARCH_TERMS="$2"
-          shift
-          ;;
-
+            SEARCH_TERMS="$2"
+            shift
+            ;;
         --options|--option)
             echo "$0: '--options' is a place-holder; " \
                  "please use '$0 --help' to get the list of available options."
             exit 2
             ;;
         -*) echo "$0: unknown option '$1'" >&2 ; exit 1 ;;
-        *)  FILES="$FILES '$1'" ;;
+        *)  FILES="${FILES} '$1'" ;;
     esac
     shift
 done
 
-echo $FILES 
-echo $SEARCH_TERMS
+echo ${FILES} 
+echo ${SEARCH_TERMS}
 exit 0
 
 eval set -- "${FILES}"
