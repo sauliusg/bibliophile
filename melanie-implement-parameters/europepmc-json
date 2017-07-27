@@ -1,4 +1,10 @@
 #! /bin/bash
+#------------------------------------------------------------------------------
+#$Author: saulius $
+#$Date: 2007-07-09 20:19:06 +0300 (Mon, 09 Jul 2007) $
+#$Revision: 1 $
+#$URL: svn://saulius-grazulis.lt/templates/SVN-header.sh $
+#------------------------------------------------------------------------------
 
 serverURL=http://www.ebi.ac.uk
 resourcePATH=europepmc/webservices/rest/search
@@ -6,7 +12,6 @@ request=query=crystal+structure
 pageSize=1000
 cursorMark='*'
 format=json
-
 options="&pageSize=$pageSize&format=$format"
 queryURL="$serverURL/$resourcePATH?$request$options"
 
