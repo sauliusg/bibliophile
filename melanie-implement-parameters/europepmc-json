@@ -1,9 +1,9 @@
 #! /bin/bash
 #------------------------------------------------------------------------------
-#$Author: saulius $
-#$Date: 2007-07-09 20:19:06 +0300 (Mon, 09 Jul 2007) $
-#$Revision: 1 $
-#$URL: svn://saulius-grazulis.lt/templates/SVN-header.sh $
+#$Author$
+#$Date$
+#$Revision$
+#$URL$
 #------------------------------------------------------------------------------
 ################################################################################
 # This script is made to collect search results on europepmc website :         #
@@ -48,6 +48,11 @@ do
                 }' $0
     	    exit
     	    ;;
+        --search_terms|--search_term|--search|--searc|--sear|--sea|--se|--s|-s)
+          SEARCH_TERMS="$2"
+          shift
+          ;;
+
         --options|--option)
             echo "$0: '--options' is a place-holder; " \
                  "please use '$0 --help' to get the list of available options."
@@ -59,7 +64,10 @@ do
     shift
 done
 
-echo ${FILES}
+echo $FILES 
+echo $SEARCH_TERMS
+exit 0
+
 eval set -- "${FILES}"
 
 test -z "${TMP_DIR}" && TMP_DIR="/tmp"
