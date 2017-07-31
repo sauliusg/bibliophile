@@ -8,7 +8,18 @@
 #* Download bibliographies from Europe-PMC, output into an xml format.  
 #**
 
+TMP_DIR="${TMPDIR}"
+
 set -ue
+## set -x
+
+setvar Id = '$Id$'
+
+setvar FILES = ""
+
+setvar BASENAME = "$(basename $0)"
+
+setvar SEARCH_TERM = ""
 
 #** USAGE:
 #**   $0 --options file1.inp files*.inp
@@ -16,7 +27,7 @@ set -ue
 #** OPTIONS:
 #**  --version                show the script Id and exit
 #**  --help                   print short help message (this message) and exit
-#**  --search-term crystal structure
+#**  --search-term            e.g. --search-term crystal structure 
 
 while [ $# -gt 0 ]
 do
@@ -27,14 +38,14 @@ do
             ;;
         --help|--hel|--he|--h)     
             awk '/#\*/,/#\*\*/ {
-                    sub("^ *#[*]?[*]?", ""); \
-                    gsub("\\$0","'$0'"); \
+                    sub("^ *#[*]?[*]?", "");
+                    gsub("\\$0","'$(basename $0')");
                     print $0
-                }' $0 #'
+                }' $0 
 	        exit
 	        ;;
         --options|--option)
-            echo "$0: '--options' is a place-holder; " \
+            echo "$0: '--options' is a place-holder; " 
                  "please use '$0 --help' to get the list of available options."
             exit 2
             ;;
@@ -43,13 +54,16 @@ do
             shift 
             ;;
         -*) echo "$0: unknown option '$1'" >&2 ; exit 1 ;;
-        *)  FILES="$FILES '$1'" ;;
+        *)  FILES="${FILES} '$1'" ;;
     esac
     shift
 done
 
 echo SEARCH_TERM=${SEARCH_TERM}
+echo FILES=${FILES}
 exit 0
+
+## Adapted template breaks, script from before is added
 
 serverURL=http://www.ebi.ac.uk
 resourcePATH=europepmc/webservices/rest/search
@@ -62,11 +76,9 @@ queryURL="$serverURL/$resourcePATH?$request$options"
 xmlresult="$(curl -sSL "$queryURL&cursorMark=$cursorMark")"
 echo "$xmlresult"
 cursorMark=$(echo "$xmlresult" \
-    | tidy -utf8 -xml -i -q \
     | perl -077 -ne 'print $1 if /<nextCursorMark>(.*?)<\/nextCursorMark>/ms')
  
 n=$(echo "$xmlresult" \
-    | tidy -utf8 -xml -i -q \
     | perl -077 -ne 'print $1 if /<hitCount>(.*?)<\/hitCount>/ms')
 
 j=$(expr $n / $pageSize)
@@ -89,3 +101,20 @@ do
     | perl -077 -ne 'print $1 if /<nextCursorMark>(.*?)<\/nextCursorMark>/ms')
     echo i=$i
 done
+
+## Script finishes
+
+eval set -- "${FILES}"
+
+test -z "${TMP_DIR}" && TMP_DIR="/tmp"
+TMP_DIR="${TMP_DIR}/tmp-${BASENAME}-$$"
+mkdir "${TMP_DIR}"
+
+## trap "rm -rf '${TMP_DIR}'" 1 2 3 15
+trap "rm -rf '${TMP_DIR}'" HUP INT QUIT TERM
+
+set -x
+
+## sleep 6
+
+rm -rf "${TMP_DIR}"
