@@ -54,10 +54,8 @@ exit 0
 serverURL=http://www.ebi.ac.uk
 resourcePATH=europepmc/webservices/rest/search
 request=query=crystal+structure
-
 pageSize=1000
 cursorMark='*'
-
 options="&pageSize=$pageSize"
 queryURL="$serverURL/$resourcePATH?$request$options"
 
