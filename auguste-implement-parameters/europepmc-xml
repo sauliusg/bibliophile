@@ -63,6 +63,8 @@ echo SEARCH_TERM=${SEARCH_TERM}
 echo FILES=${FILES}
 exit 0
 
+eval set -- "${FILES}"
+
 ## Adapted template breaks, script from before is added
 
 serverURL=http://www.ebi.ac.uk
@@ -102,8 +104,6 @@ do
 done
 
 ## Script finishes
-
-eval set -- "${FILES}"
 
 test -z "${TMP_DIR}" && TMP_DIR="/tmp"
 TMP_DIR="${TMP_DIR}/tmp-${BASENAME}-$$"
