@@ -1,17 +1,17 @@
 #! /bin/bash
 #------------------------------------------------------------------------------
-#$Author$
-#$Date$
-#$Revision$
-#$URL$
+#$Author: melanie $
+#$Date: 2017-07-27 18:34:29 +0300 (Thu, 27 Jul 2017) $
+#$Revision: 15 $
+#$URL: svn://saulius-grazulis.lt/bibliophile/branches/feature/melanie-implement-parameters/europepmc-json $
 #------------------------------------------------------------------------------
-################################################################################
-# This script is made to collect search results on europepmc website :         #
-# User enters the search terms as arguments of the script, using the option    #
-# --search_terms, or writes them in a file, given as an argument as well. The  #
-# script makes the query on the website and returns the results on the standard#
-# output.                                                                      #
-################################################################################
+#*
+# This script is made to collect search results on europepmc website :
+# User enters the search terms as arguments of the script, using the option 
+# --search_terms, or writes them in a file, given as an argument as well. The
+# script makes the query on the website and returns the results on the standard
+# output.
+#**
 
 TMP_DIR="${TMPDIR}"
 
@@ -28,13 +28,15 @@ setvar FILES = ""
 setvar BASENAME = "$(basename $0)"
 
 #** USAGE:
-#**   $0 --options file1.inp files*.inp
+#**   $0 --options 'search_term_1+search_term_2' files*.inp
 #**
 #** OPTIONS:
-#**  
+#**  --version         Print name, version, date and author of the script.
+#**
 #**  --search_terms    Add search terms (in quotes) as arguments
-#**   -s                      after this option
-#**  --help            Print short help message (this message) and exit
+#**   -s                                       after this option.
+#**
+#**  --help            Print short help message (this message) and exit.
 while [ $# -gt 0 ]
 do
     case $1 in
