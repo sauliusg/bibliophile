@@ -67,9 +67,8 @@ do
     shift
 done
 
-echo ${FILES} 
-echo ${SEARCH_TERMS}
-exit 0
+echo 'files : '${FILES} 
+echo 'search terms : '${SEARCH_TERMS}
 
 eval set -- "${FILES}"
 
@@ -88,12 +87,12 @@ rm -rf "${TMP_DIR}"
 #------------------------------------------------------------------------------#
 serverURL=http://www.ebi.ac.uk
 resourcePATH=europepmc/webservices/rest/search
-request=query=crystal+structure
+#request=query=${SEARCH_TERMS}
 pageSize=1000
 cursorMark='*'
 format=json
 options="&pageSize=$pageSize&format=$format"
-queryURL="$serverURL/$resourcePATH?$request$options"
+queryURL="$serverURL/$resourcePATH?query=${SEARCH_TERMS}$options"
 
 result="$(curl -sSL "$queryURL&cursorMark=$cursorMark")"
 echo "$result"
@@ -101,11 +100,17 @@ cursorMark=$(echo "$result" \
         | jq . | awk '/nextCursorMark/{print $2}' | sed 's/[",]//g')
 n=$(echo "$result" | jq . | awk '/hitCount/{print $2}' | sed 's/,//')
 
-j=$(expr $n / $pageSize) 
+j=$(expr $n / $pageSize)
+
+echo $n
+echo $j
+
 if [ $(expr $n % $pageSize) -eq 0 ]
 then
     j=$(expr $j - 1)
 fi
+
+echo $j
 
 for i in $(seq 1 $j) ;
 do
