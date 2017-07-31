@@ -1,9 +1,9 @@
 #! /bin/bash
 #------------------------------------------------------------------------------
-#$Author: melanie $
-#$Date: 2017-07-27 18:34:29 +0300 (Thu, 27 Jul 2017) $
-#$Revision: 15 $
-#$URL: svn://saulius-grazulis.lt/bibliophile/branches/feature/melanie-implement-parameters/europepmc-json $
+#$Author$
+#$Date$
+#$Revision$
+#$URL$
 #------------------------------------------------------------------------------
 #*
 # This script is made to collect search results on europepmc website :
@@ -21,7 +21,7 @@ set -ue
 script() { echo "# $*"; cat; }
 setvar() { eval $1="'$3'"; }
 
-setvar Id = '$Id: script.bash 32 2017-07-26 14:05:11Z saulius $'
+setvar Id = '$Id$'
 
 setvar FILES = ""
 
