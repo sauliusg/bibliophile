@@ -97,7 +97,6 @@ do
     xmlresult="$(curl -sSL "$queryURL&cursorMark=$cursorMark")"
     echo "$xmlresult"
     cursorMark=$(echo "$xmlresult" \
-    | tidy -utf8 -xml -i -q \
     | perl -077 -ne 'print $1 if /<nextCursorMark>(.*?)<\/nextCursorMark>/ms')
     echo i=$i
 done
