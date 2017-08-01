@@ -13,13 +13,20 @@ TMP_DIR="${TMPDIR}"
 set -ue
 ## set -x
 
-setvar Id = '$Id$'
+Id="$Id$"
+FILES=""
+BASENAME="$(basename $0)"
+SEARCH_TERM=""
 
-setvar FILES = ""
-
-setvar BASENAME = "$(basename $0)"
-
-setvar SEARCH_TERM = ""
+serverURL=http://www.ebi.ac.uk
+resourcePATH=europepmc/webservices/rest/search
+request=query=$SEARCH_TERM
+##changed query from crystal+structure
+pageSize=1000
+cursorMark='*'
+options="&pageSize=$pageSize"
+queryURL="$serverURL/$resourcePATH?$request$options"
+xmlresult="$(curl -sSL "$queryURL&cursorMark=$cursorMark")"
 
 #** USAGE:
 #**   $0 --options file1.inp files*.inp
@@ -31,7 +38,7 @@ setvar SEARCH_TERM = ""
 
 while [ $# -gt 0 ]
 do
-    case $1 in
+    case "$1" in
         --version|--versio|--versi|--vers|--ver|--ve|--v)
             echo $Id
             exit
@@ -39,7 +46,7 @@ do
         --help|--hel|--he|--h)     
             awk '/#\*/,/#\*\*/ {
                     sub("^ *#[*]?[*]?", "");
-                    gsub("\\$0","'$(basename $0')");
+                    gsub("\\$0","'$(basename $0)'");
                     print $0
                 }' $0 
 	        exit
@@ -64,46 +71,55 @@ echo FILES=${FILES}
 exit 0
 
 eval set -- "${FILES}"
+## puts contents of the variable (files) as arguments of the cmd line
 
-## Adapted template breaks, script from before is added
-
-serverURL=http://www.ebi.ac.uk
-resourcePATH=europepmc/webservices/rest/search
-request=query=crystal+structure
-pageSize=1000
-cursorMark='*'
-options="&pageSize=$pageSize"
-queryURL="$serverURL/$resourcePATH?$request$options"
-
-xmlresult="$(curl -sSL "$queryURL&cursorMark=$cursorMark")"
-echo "$xmlresult"
-cursorMark=$(echo "$xmlresult" \
-    | perl -077 -ne 'print $1 if /<nextCursorMark>(.*?)<\/nextCursorMark>/ms')
- 
-n=$(echo "$xmlresult" \
-    | perl -077 -ne 'print $1 if /<hitCount>(.*?)<\/hitCount>/ms')
-
-j=$(expr $n / $pageSize)
-
-echo n=$n
-echo j=$j
-echo cursorMark=$cursorMark
-
-if [ $(expr $n % $pageSize) -eq 0 ]
-then
-    j=$(expr $j - 1)
+if [ "${SEARCH_TERM}" = "" ]
+## checks the variable for content
+    then
+        cat "$@"
+    else 
+	    echo "${search_term}"
+	    if [ $# -gt 0 ]
+	    then 
+		    cat "$@"
+## @ - puts the content of all files into STDOUT
+        fi
 fi
+ ## pipes it further
+| grep -vP '^#|^\s*$' 
+## greps everything that is not an empty line or a comment, -v(reverse), P(erl)
+| while read TERM
+## takes into loop STDOUT and reads it line by line, then each time SEARCH_TERM
+## =content of the line
 
-for i in $(seq 1 $j) ;
-do
-    xmlresult="$(curl -sSL "$queryURL&cursorMark=$cursorMark")"
-    echo "$xmlresult"
+do  
+    echo "$xmlresult" 
     cursorMark=$(echo "$xmlresult" \
     | perl -077 -ne 'print $1 if /<nextCursorMark>(.*?)<\/nextCursorMark>/ms')
-    echo i=$i
-done
+ 
+    n=$(echo "$xmlresult" \
+    | perl -077 -ne 'print $1 if /<hitCount>(.*?)<\/hitCount>/ms')
 
-## Script finishes
+    j=$(expr $n / $pageSize)
+
+    echo n=$n
+    echo j=$j
+    echo cursorMark=$cursorMark
+
+    if [ $(expr $n % $pageSize) -eq 0 ]
+    then
+        j=$(expr $j - 1)
+    fi
+
+    for i in $(seq 1 $j) ;
+        do
+            xmlresult="$(curl -sSL "$queryURL&cursorMark=$cursorMark")"
+            echo "$xmlresult"
+            cursorMark=$(echo "$xmlresult" \
+            | perl -077 -ne 'print $1 if /<nextCursorMark>(.*?)<\/nextCursorMark>/ms')
+            echo i=$i
+        done
+
 
 test -z "${TMP_DIR}" && TMP_DIR="/tmp"
 TMP_DIR="${TMP_DIR}/tmp-${BASENAME}-$$"
