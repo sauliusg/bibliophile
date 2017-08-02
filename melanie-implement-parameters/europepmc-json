@@ -40,25 +40,22 @@ setvar format        = json
 #**     (beforehand, or using '--URL-Encoding' option)
 #**
 #** OPTIONS:
-#**  --version         Prints name, version, date and author of the script.
+#**  --help            Prints short help message (this message) and exit.
 #**
+#**  -n                Prints the number of results
+#**  
 #**  --search-terms    Add search terms (in quotes) as arguments after this
 #**   -s               option. They will be url encoded in the script.
-#**
-#**  --help            Prints short help message (this message) and exit.
 #**
 #**  --URL-Encoding    Url encodes the content of the file(s).
 #**   -U
 #**
-#**  -n                Prints the number of results
+#**  --version         Prints name, version, date and author of the script.
+
 
 while [ $# -gt 0 ]
 do
     case $1 in
-        --version|--versio|--versi|--vers|--ver|--ve|--v)
-            echo $INFO
-            exit
-            ;;
         --help|--hel|--he|--h)
             awk '/#\*/,/#\*\*/ {
                     sub("^ *#[*]?[*]?", ""); \
@@ -67,21 +64,28 @@ do
                 }' $0
             exit
             ;;
-        --search-terms|--search-term|--search|--searc|--sear|--sea|--se|--s|-s)
-            SEARCH_TERMS="$2"
-            shift
+        -n)
+            HITCOUNT_ONLY=true
             ;;
         --options|--option)
             echo "$0: '--options' is a place-holder; " \
                  "please use '$0 --help' to get the list of available options."
             exit 2
             ;;
+        --search-terms|--search-term|--search|--searc|--sear|--sea|--se|--s|-s)
+            SEARCH_TERMS="$2"
+            shift
+            ;;
+        
         --URL-Encoding|--URL|-U)
             URLENCODE=true
             ;;
-        -n)
-            HITCOUNT_ONLY=true
+        
+        --version|--versio|--versi|--vers|--ver|--ve|--v)
+            echo $INFO
+            exit
             ;;
+
         -*) echo "$0: unknown option '$1'" >&2 ; exit 1 ;;
         *)  FILES="${FILES} '$1'" ;;
     esac
