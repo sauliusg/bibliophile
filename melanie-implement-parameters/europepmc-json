@@ -34,21 +34,18 @@ setvar format        = json
 #** USAGE:
 #**   $0 --options 'search_term_1+search_term_2' files*.inp
 #**
-#** /!\ search terms in files must be url-encoded ! /!\
-#**     (beforehand, or using '--URL-Encoding' option)
-#**
 #** OPTIONS:
-#**  --help            Prints short help message (this message) and exit.
+#**  -n, --hit-count      Prints the number of results
 #**
-#**  -n                Prints the number of results
+#**  -s, --search-terms crystal+structure
+#**                       Add search terms (in quotes) as arguments after this
+#**                       option.
 #**
-#**  --search-terms    Add search terms (in quotes) as arguments after this
-#**   -s               option. They will be url encoded in the script.
+#**  -U, --url-encode     Url encode all search terms.
 #**
-#**  --URL-Encoding    Url encodes the content of the file(s).
-#**   -U
+#**  --version            Prints name, version, date and author of the script.
 #**
-#**  --version         Prints name, version, date and author of the script.
+#**  --help   Prints short help message (this message) and exit.
 
 while [ $# -gt 0 ]
 do
