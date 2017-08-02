@@ -12,11 +12,9 @@
 # as well. The script makes the query on the website and returns the results on
 # the standard output.
 #**
-
 TMP_DIR="${TMPDIR}"
 
 set -ue
-## set -x
 
 script() { echo "# $*"; cat; }
 setvar() { eval $1="'$3'"; }
@@ -43,7 +41,7 @@ setvar format        = json
 #**  --help            Prints short help message (this message) and exit.
 #**
 #**  -n                Prints the number of results
-#**  
+#**
 #**  --search-terms    Add search terms (in quotes) as arguments after this
 #**   -s               option. They will be url encoded in the script.
 #**
@@ -51,7 +49,6 @@ setvar format        = json
 #**   -U
 #**
 #**  --version         Prints name, version, date and author of the script.
-
 
 while [ $# -gt 0 ]
 do
@@ -97,11 +94,11 @@ echo 'search terms : '${SEARCH_TERMS}
 
 eval set -- "${FILES}"
 
-if [ "${SEARCH_TERM}" = "" ]
+if [ "${SEARCH_TERMS}" = "" ]
 then 
     cat "$@"
 else
-    echo "${SEARCH_TERM}"\
+    echo "${SEARCH_TERMS}"\
     | perl -MURI::Encode -nle \
         'print URI::Encode::uri_encode($_,{encode_reserved=>1})'\
     | sed 's/%20/+/g'
@@ -117,16 +114,19 @@ then
         'print URI::Encode::uri_encode($_,{encode_reserved=>1})'\
     | sed 's/%20/+/g'
 else
-    cat "$@"
+    cat
 fi \
-| while read SEARCH_TERM
+| while read SEARCH_TERMS
 do
+    echo ${SEARCH_TERMS}
+    continue
     setvar request  = query="${SEARCH_TERMS}"
     setvar queryURL = "$serverURL/$resourcePATH?$request"
     setvar result   = "$(curl -sSL "$queryURL&format=json&pageSize=1")"
     n=$(echo "$result" | jq . | awk '/hitCount/{print $2}' | sed 's/,//')
 
     if [ $HITCOUNT_ONLY = true ]
+    then
         echo -e $n"\t": ${SEARCH_TERMS}
     else
         j=$(expr $n / $pageSize)    
