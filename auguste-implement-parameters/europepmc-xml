@@ -13,26 +13,21 @@ TMP_DIR="${TMPDIR}"
 set -ue
 ## set -x
 
-Id="$Id$"
+INFO='$Id$'
 FILES=""
 BASENAME="$(basename $0)"
 SEARCH_TERM=""
 
 serverURL=http://www.ebi.ac.uk
 resourcePATH=europepmc/webservices/rest/search
-request=query=$SEARCH_TERM
-##changed query from crystal+structure
 pageSize=1000
-cursorMark='*'
-options="&pageSize=$pageSize"
-queryURL="$serverURL/$resourcePATH?$request$options"
-xmlresult="$(curl -sSL "$queryURL&cursorMark=$cursorMark")"
+format=xml
 
 #** USAGE:
 #**   $0 --options file1.inp files*.inp
 #**
 #** OPTIONS:
-#**  --version                show the script Id and exit
+#**  --version                show the script INFO and exit
 #**  --help                   print short help message (this message) and exit
 #**  --search-term            e.g. --search-term crystal structure 
 
@@ -40,7 +35,7 @@ while [ $# -gt 0 ]
 do
     case "$1" in
         --version|--versio|--versi|--vers|--ver|--ve|--v)
-            echo $Id
+            echo $INFO
             exit
             ;;
         --help|--hel|--he|--h)     
@@ -68,58 +63,9 @@ done
 
 echo SEARCH_TERM=${SEARCH_TERM}
 echo FILES=${FILES}
-exit 0
 
 eval set -- "${FILES}"
 ## puts contents of the variable (files) as arguments of the cmd line
-
-if [ "${SEARCH_TERM}" = "" ]
-## checks the variable for content
-    then
-        cat "$@"
-    else 
-	    echo "${search_term}"
-	    if [ $# -gt 0 ]
-	    then 
-		    cat "$@"
-## @ - puts the content of all files into STDOUT
-        fi
-fi
- ## pipes it further
-| grep -vP '^#|^\s*$' 
-## greps everything that is not an empty line or a comment, -v(reverse), P(erl)
-| while read TERM
-## takes into loop STDOUT and reads it line by line, then each time SEARCH_TERM
-## =content of the line
-
-do  
-    echo "$xmlresult" 
-    cursorMark=$(echo "$xmlresult" \
-    | perl -077 -ne 'print $1 if /<nextCursorMark>(.*?)<\/nextCursorMark>/ms')
- 
-    n=$(echo "$xmlresult" \
-    | perl -077 -ne 'print $1 if /<hitCount>(.*?)<\/hitCount>/ms')
-
-    j=$(expr $n / $pageSize)
-
-    echo n=$n
-    echo j=$j
-    echo cursorMark=$cursorMark
-
-    if [ $(expr $n % $pageSize) -eq 0 ]
-    then
-        j=$(expr $j - 1)
-    fi
-
-    for i in $(seq 1 $j) ;
-        do
-            xmlresult="$(curl -sSL "$queryURL&cursorMark=$cursorMark")"
-            echo "$xmlresult"
-            cursorMark=$(echo "$xmlresult" \
-            | perl -077 -ne 'print $1 if /<nextCursorMark>(.*?)<\/nextCursorMark>/ms')
-            echo i=$i
-        done
-
 
 test -z "${TMP_DIR}" && TMP_DIR="/tmp"
 TMP_DIR="${TMP_DIR}/tmp-${BASENAME}-$$"
@@ -128,7 +74,55 @@ mkdir "${TMP_DIR}"
 ## trap "rm -rf '${TMP_DIR}'" 1 2 3 15
 trap "rm -rf '${TMP_DIR}'" HUP INT QUIT TERM
 
-set -x
+##set -x
+
+## checks the variable for content:
+if [ "${SEARCH_TERM}" = "" ]
+then
+    cat "$@"
+else 
+	echo "${SEARCH_TERM}"
+	if [ $# -gt 0 ]
+	then 
+        cat "$@"
+## @ - puts the content of all files into STDOUT
+    fi
+fi \
+| grep -vE '^#|^\s*$' \
+| while read SEARCH_TERM
+do  
+## greps everything that is not an empty line or a comment, -v(reverse), P(erl)
+## takes into loop STDOUT and reads it line by line, then each time SEARCH_TERM
+## =content of the line
+    request=query=$SEARCH_TERM
+    queryURL="$serverURL/$resourcePATH?$request"
+    xmlresult="$(set -x; curl -sSL "$queryURL&pageSize=1&format=xml")"
+   
+    n=$(echo "$xmlresult" \
+    | perl -077 -ne 'print $1 if /<hitCount>(.*?)<\/hitCount>/ms')
+
+    j=$(expr $n / $pageSize)
+
+    echo n=$n
+    echo j=$j
+    if [ $(expr $n % $pageSize) -ne 0 ]
+    then
+        j=$(expr $j + 1 )
+    fi
+    
+    options="pageSize=$pageSize&format=$format"
+    cursorMark='*'
+    for i in $(seq 1 $j) ;
+    do
+        xmlresult="$(curl -sSL "$queryURL&cursorMark=$cursorMark&$options")"
+        echo "$xmlresult"
+        cursorMark=$(echo "$xmlresult" \
+            | perl -077 -ne \
+                'print $1 if /<nextCursorMark>(.*?)<\/nextCursorMark>/ms')
+        echo i=$i
+    done
+
+done
 
 ## sleep 6
 
