@@ -17,7 +17,7 @@ TMP_DIR="${TMPDIR}"
 set -ue
 
 script() { echo "# $*"; cat; }
-setvar() { eval $1="'$3'"; }
+setvar() { eval $1="'$(echo "$3" | sed "s/\\\\/\\\\\\\\/g; s/'/'\\\\''/g")'"; }
 
 setvar INFO          = '$Id$'
 setvar FILES         = ""
@@ -119,7 +119,7 @@ fi \
 | while read SEARCH_TERMS
 do
     echo ${SEARCH_TERMS}
-    continue
+
     setvar request  = query="${SEARCH_TERMS}"
     setvar queryURL = "$serverURL/$resourcePATH?$request"
     setvar result   = "$(curl -sSL "$queryURL&format=json&pageSize=1")"
