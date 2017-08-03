@@ -76,7 +76,7 @@ out outputs: ${OUTP_FILES}
 
 ${OUTP_DIR}/%.diff: ${TEST_DIR}/%.inp ${TEST_DIR}/%.opt ${OUTP_DIR}/%.out
 	-@printf "%-50s " "$<:" ; \
-	if [ ! -e ${TEST_DIR}/$*.tst ] || ${TEST_DIR}/$*.tst; then \
+	if [ ! -e ${TEST_DIR}/$*.chk ] || ${TEST_DIR}/$*.chk; then \
 		${BIN_DIR}/$(shell echo $* | sed -e 's/_[0-9]*$$//') \
 		    $(shell grep -v '^#' ${word 2, $^}) \
 	    	$< 2>&1 \
@@ -88,7 +88,7 @@ ${OUTP_DIR}/%.diff: ${TEST_DIR}/%.inp ${TEST_DIR}/%.opt ${OUTP_DIR}/%.out
 
 ${OUTP_DIR}/%.diff: ${TEST_DIR}/%.inp ${OUTP_DIR}/%.out
 	-@printf "%-50s " "$<:" ; \
-	if [ ! -e ${TEST_DIR}/$*.tst ] || ${TEST_DIR}/$*.tst; then \
+	if [ ! -e ${TEST_DIR}/$*.chk ] || ${TEST_DIR}/$*.chk; then \
 		${BIN_DIR}/$(shell echo $* | sed -e 's/_[0-9]*$$//') \
 		    $< 2>&1 \
 		| diff ${OUTP_DIR}/$*.out - > $@ ; \
@@ -99,7 +99,7 @@ ${OUTP_DIR}/%.diff: ${TEST_DIR}/%.inp ${OUTP_DIR}/%.out
 
 ${OUTP_DIR}/%.diff: ${TEST_DIR}/%.opt ${OUTP_DIR}/%.out
 	-@printf "%-50s " "$<:" ; \
-	if [ ! -e ${TEST_DIR}/$*.tst ] || ${TEST_DIR}/$*.tst; then \
+	if [ ! -e ${TEST_DIR}/$*.chk ] || ${TEST_DIR}/$*.chk; then \
 		${BIN_DIR}/$(shell echo $* | sed -e 's/_[0-9]*$$//') \
 		    $(shell grep -v '^#' $<) \
 		2>&1 \
@@ -111,7 +111,7 @@ ${OUTP_DIR}/%.diff: ${TEST_DIR}/%.opt ${OUTP_DIR}/%.out
 
 ${OUTP_DIR}/%.diff: ${TEST_DIR}/%.sh ${OUTP_DIR}/%.out
 	-@printf "%-50s " "$<:" ; \
-	if [ ! -e ${TEST_DIR}/$*.tst ] || ${TEST_DIR}/$*.tst; then \
+	if [ ! -e ${TEST_DIR}/$*.chk ] || ${TEST_DIR}/$*.chk; then \
 		$< 2>&1 | diff ${OUTP_DIR}/$*.out - > $@ ; \
 		if [ $$? = 0 ]; then echo "OK"; else echo "FAILED:"; cat $@; fi; \
 	else \
