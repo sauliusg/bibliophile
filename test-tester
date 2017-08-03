@@ -13,5 +13,6 @@ echo $*
 
 if [ $# -gt 0 ]
 then
+    while [ $# -gt 1 ]; do shift; done
     cat $1
 fi
