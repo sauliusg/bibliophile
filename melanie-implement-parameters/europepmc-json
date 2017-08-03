@@ -17,19 +17,18 @@ TMP_DIR="${TMPDIR}"
 set -ue
 
 script() { echo "# $*"; cat; }
-setvar() { eval $1="'$(echo "$3" | sed "s/\\\\/\\\\\\\\/g; s/'/'\\\\''/g")'"; }
 
-setvar INFO          = '$Id$'
-setvar FILES         = ""
-setvar SEARCH_TERMS  = ""
-setvar BASENAME      = "$(basename $0)"
-setvar HITCOUNT_ONLY = false
-setvar URLENCODE     = false
-setvar serverURL     = http://www.ebi.ac.uk
-setvar resourcePATH  = europepmc/webservices/rest/search
-setvar pageSize      = 1000
-setvar cursorMark    = '*'
-setvar format        = json
+INFO='$Id$'
+FILES=""
+SEARCH_TERMS=""
+BASENAME="$(basename $0)"
+HITCOUNT_ONLY=false
+URLENCODE=false
+serverURL=http://www.ebi.ac.uk
+resourcePATH=europepmc/webservices/rest/search
+pageSize=1000
+cursorMark='*'
+format=json
 
 #** USAGE:
 #**   $0 --options 'search_term_1+search_term_2' files*.inp
@@ -117,9 +116,9 @@ fi \
 do
     echo ${SEARCH_TERMS}
 
-    setvar request  = query="${SEARCH_TERMS}"
-    setvar queryURL = "$serverURL/$resourcePATH?$request"
-    setvar result   = "$(curl -sSL "$queryURL&format=json&pageSize=1")"
+    request=query="${SEARCH_TERMS}"
+    queryURL="$serverURL/$resourcePATH?$request"
+    result="$(curl -sSL "$queryURL&format=json&pageSize=1")"
     n=$(echo "$result" | jq . | awk '/hitCount/{print $2}' | sed 's/,//')
 
     if [ $HITCOUNT_ONLY = true ]
@@ -132,7 +131,7 @@ do
             j=$(expr $j + 1)
         fi
 
-        setvar options = "format=$format&pageSize=$pageSize"
+        options="format=$format&pageSize=$pageSize"
 
         for i in $(seq 1 $j) ;
         do
