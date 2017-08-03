@@ -1,0 +1,17 @@
+#! /bin/sh
+
+# This script is intended to check if the test system works as expected.
+
+# USAGE:
+#     $0
+#     $0 file
+#     $0 file arguments
+
+set -ue
+
+echo $*
+
+if [ $# -gt 0 ]
+then
+    cat $1
+fi
