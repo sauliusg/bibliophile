@@ -27,7 +27,6 @@ URLENCODE=false
 serverURL=http://www.ebi.ac.uk
 resourcePATH=europepmc/webservices/rest/search
 pageSize=1000
-cursorMark='*'
 format=json
 
 #** USAGE:
@@ -36,7 +35,7 @@ format=json
 #** OPTIONS:
 #**  -n, --hit-count      Prints the number of results
 #**
-#**  -s, --search-terms crystal+structure
+#**  -s, --search-terms 'crystal+structure'
 #**                       Add search terms (in quotes) as arguments after this
 #**                       option.
 #**
@@ -94,10 +93,7 @@ if [ "${SEARCH_TERMS}" = "" ]
 then 
     cat "$@"
 else
-    echo "${SEARCH_TERMS}"\
-    | perl -MURI::Encode -nle \
-        'print URI::Encode::uri_encode($_,{encode_reserved=>1})'\
-    | sed 's/%20/+/g'
+    echo "${SEARCH_TERMS}"
     if [ $# -gt 0 ]
     then
         cat "$@"
@@ -119,6 +115,7 @@ do
     request=query="${SEARCH_TERMS}"
     queryURL="$serverURL/$resourcePATH?$request"
     result="$(curl -sSL "$queryURL&format=json&pageSize=1")"
+
     n=$(echo "$result" | jq . | awk '/hitCount/{print $2}' | sed 's/,//')
 
     if [ $HITCOUNT_ONLY = true ]
@@ -132,7 +129,7 @@ do
         fi
 
         options="format=$format&pageSize=$pageSize"
-
+        cursorMark='*'
         for i in $(seq 1 $j) ;
         do
             result="$(curl -sSL \
