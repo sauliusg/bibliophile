@@ -95,6 +95,15 @@ echo 'search terms : '${SEARCH_TERMS}
 
 eval set -- "${FILES}"
 
+test -z "${TMP_DIR}" && TMP_DIR="/tmp"
+TMP_DIR="${TMP_DIR}/tmp-${BASENAME}-$$"
+mkdir "${TMP_DIR}"
+
+## trap "rm -rf '${TMP_DIR}'" 1 2 3 15
+trap "rm -rf '${TMP_DIR}'" HUP INT QUIT TERM
+
+## set -x
+
 if [ "${SEARCH_TERMS}" = "" ]
 then 
     cat "$@"
@@ -128,12 +137,17 @@ do
     then
         echo -e $n"\t": ${SEARCH_TERMS}
     else
-        j=$(expr $n / $pageSize)    
-        if [ $(expr $n % $pageSize) -gt 0 ]
+        if [ $n -lt $pageSize ]
         then
-            j=$(expr $j + 1)
+            j=1
+        else
+            j=$(expr $n / $pageSize)    
+            if [ $(expr $n % $pageSize) -gt 0 ]
+            then
+                j=$(expr $j + 1)
+            fi
         fi
-
+        
         options="format=$format&pageSize=$pageSize"
         cursorMark='*'
         for i in $(seq 1 $j) ;
@@ -146,15 +160,6 @@ do
         done
     fi
 done
-
-test -z "${TMP_DIR}" && TMP_DIR="/tmp"
-TMP_DIR="${TMP_DIR}/tmp-${BASENAME}-$$"
-mkdir "${TMP_DIR}"
-
-## trap "rm -rf '${TMP_DIR}'" 1 2 3 15
-trap "rm -rf '${TMP_DIR}'" HUP INT QUIT TERM
-
-set -x
 
 ## sleep 6
 
