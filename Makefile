@@ -75,7 +75,7 @@ out outputs: ${OUTP_FILES}
 # Rules to run script-specific tests:
 
 ${OUTP_DIR}/%.diff: ${TEST_DIR}/%.inp ${TEST_DIR}/%.opt ${OUTP_DIR}/%.out
-	-@printf "%-30s " "$<:" ; \
+	-@printf "%-50s " "$<:" ; \
 	if [ ! -e ${TEST_DIR}/$*.tst ] || ${TEST_DIR}/$*.tst; then \
 		${BIN_DIR}/$(shell echo $* | sed -e 's/_[0-9]*$$//') \
 		    $(shell grep -v '^#' ${word 2, $^}) \
@@ -85,7 +85,7 @@ ${OUTP_DIR}/%.diff: ${TEST_DIR}/%.inp ${TEST_DIR}/%.opt ${OUTP_DIR}/%.out
 	fi
 
 ${OUTP_DIR}/%.diff: ${TEST_DIR}/%.inp ${OUTP_DIR}/%.out
-	-@printf "%-30s " "$<:" ; \
+	-@printf "%-50s " "$<:" ; \
 	if [ ! -e ${TEST_DIR}/$*.tst ] || ${TEST_DIR}/$*.tst; then \
 		${BIN_DIR}/$(shell echo $* | sed -e 's/_[0-9]*$$//') \
 		    $< 2>&1 \
@@ -94,7 +94,7 @@ ${OUTP_DIR}/%.diff: ${TEST_DIR}/%.inp ${OUTP_DIR}/%.out
 	fi
 
 ${OUTP_DIR}/%.diff: ${OUTP_DIR}/%.opt ${OUTP_DIR}/%.out
-	-@printf "%-30s " "$<:" ; \
+	-@printf "%-50s " "$<:" ; \
 	if [ ! -e ${TEST_DIR}/$*.tst ] || ${TEST_DIR}/$*.tst; then \
 		${BIN_DIR}/$(shell echo $* | sed -e 's/_[0-9]*$$//') \
 		    $(shell grep -v '^#' $<) \
@@ -104,7 +104,7 @@ ${OUTP_DIR}/%.diff: ${OUTP_DIR}/%.opt ${OUTP_DIR}/%.out
 	fi
 
 ${OUTP_DIR}/%.diff: ${TEST_DIR}/%.sh ${OUTP_DIR}/%.out
-	-@printf "%-30s " "$<:" ; \
+	-@printf "%-50s " "$<:" ; \
 	if [ ! -e ${TEST_DIR}/$*.tst ] || ${TEST_DIR}/$*.tst; then \
 		$< 2>&1 | diff ${OUTP_DIR}/$*.out - > $@ ; \
 		if [ $$? = 0 ]; then echo "OK"; else echo "FAILED:"; cat $@; fi; \
