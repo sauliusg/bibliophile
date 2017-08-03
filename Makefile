@@ -82,6 +82,8 @@ ${OUTP_DIR}/%.diff: ${TEST_DIR}/%.inp ${TEST_DIR}/%.opt ${OUTP_DIR}/%.out
 	    	$< 2>&1 \
 		| diff ${OUTP_DIR}/$*.out - > $@ ; \
 		if [ $$? = 0 ]; then echo "OK"; else echo "FAILED:"; cat $@; fi; \
+	else \
+		touch $@; \
 	fi
 
 ${OUTP_DIR}/%.diff: ${TEST_DIR}/%.inp ${OUTP_DIR}/%.out
@@ -91,6 +93,8 @@ ${OUTP_DIR}/%.diff: ${TEST_DIR}/%.inp ${OUTP_DIR}/%.out
 		    $< 2>&1 \
 		| diff ${OUTP_DIR}/$*.out - > $@ ; \
 		if [ $$? = 0 ]; then echo "OK"; else echo "FAILED:"; cat $@; fi; \
+	else \
+		touch $@; \
 	fi
 
 ${OUTP_DIR}/%.diff: ${OUTP_DIR}/%.opt ${OUTP_DIR}/%.out
@@ -101,6 +105,8 @@ ${OUTP_DIR}/%.diff: ${OUTP_DIR}/%.opt ${OUTP_DIR}/%.out
 		2>&1 \
 		| diff ${OUTP_DIR}/$*.out - > $@ ; \
 		if [ $$? = 0 ]; then echo "OK"; else echo "FAILED:"; cat $@; fi; \
+	else \
+		touch $@; \
 	fi
 
 ${OUTP_DIR}/%.diff: ${TEST_DIR}/%.sh ${OUTP_DIR}/%.out
@@ -108,6 +114,8 @@ ${OUTP_DIR}/%.diff: ${TEST_DIR}/%.sh ${OUTP_DIR}/%.out
 	if [ ! -e ${TEST_DIR}/$*.tst ] || ${TEST_DIR}/$*.tst; then \
 		$< 2>&1 | diff ${OUTP_DIR}/$*.out - > $@ ; \
 		if [ $$? = 0 ]; then echo "OK"; else echo "FAILED:"; cat $@; fi; \
+	else \
+		touch $@; \
 	fi
 
 # Rules to generate sample test outputs:
