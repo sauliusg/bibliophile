@@ -33,17 +33,20 @@ format=json
 #**   $0 --options 'search_term_1+search_term_2' files*.inp
 #**
 #** OPTIONS:
-#**  -n, --hit-count      Prints the number of results
+#**  -n, --hit-count    Prints the number of results.
+#**
+#**  --ps, --page-size '10'
+#**                     Modify the number of results per page (default is 1000).
 #**
 #**  -s, --search-terms 'crystal+structure'
-#**                       Add search terms (in quotes) as arguments after this
-#**                       option.
+#**                     Add search terms (in quotes) as arguments after this
+#**                     option.
 #**
-#**  -U, --url-encode     Url encode all search terms.
+#**  -U, --url-encode   Url encode all search terms.
 #**
-#**  --version            Prints name, version, date and author of the script.
+#**  --version          Prints name, version, date and author of the script.
 #**
-#**  --help   Prints short help message (this message) and exit.
+#**  --help             Prints short help message (this message) and exit.
 
 while [ $# -gt 0 ]
 do
@@ -64,21 +67,24 @@ do
                  "please use '$0 --help' to get the list of available options."
             exit 2
             ;;
+        --ps|--page-size)
+            pageSize="$2"
+            shift
+            ;;
         --search-terms|--search-term|--search|--searc|--sear|--sea|--se|--s|-s)
             SEARCH_TERMS="$2"
             shift
             ;;
-        
-        --URL-Encoding|--URL|-U)
+        --url-encode|--URL|-U)
             URLENCODE=true
             ;;
-        
         --version|--versio|--versi|--vers|--ver|--ve|--v)
             echo $INFO
             exit
             ;;
-
-        -*) echo "$0: unknown option '$1'" >&2 ; exit 1 ;;
+        -*) echo "$0: unknown option '$1'" >&2
+            exit 1
+            ;;
         *)  FILES="${FILES} '$1'" ;;
     esac
     shift
