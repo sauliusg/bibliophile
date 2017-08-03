@@ -168,7 +168,7 @@ ${OUTP_DIR}/%.out: ${TEST_DIR}/%.sh
 .PHONY: failed listdiff
 
 failed listdiff: ## test
-	@-find ${OUTP_DIR} -type f -size +0 | sort -u
+	@-find ${OUTP_DIR} -type f -name '*.diff' -size +0 | sort -u
 
 #------------------------------------------------------------------------------
 
