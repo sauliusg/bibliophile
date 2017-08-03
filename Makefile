@@ -52,7 +52,7 @@ OUTP_FILES = $(sort ${INP_OUTS} ${OPT_OUTS} ${SH_OUTS})
 all: tests
 
 display:
-	@echo ${SH_DIFFS}
+	@echo ${DIFF_FILES}
 
 #------------------------------------------------------------------------------
 
@@ -97,7 +97,7 @@ ${OUTP_DIR}/%.diff: ${TEST_DIR}/%.inp ${OUTP_DIR}/%.out
 		touch $@; \
 	fi
 
-${OUTP_DIR}/%.diff: ${OUTP_DIR}/%.opt ${OUTP_DIR}/%.out
+${OUTP_DIR}/%.diff: ${TEST_DIR}/%.opt ${OUTP_DIR}/%.out
 	-@printf "%-50s " "$<:" ; \
 	if [ ! -e ${TEST_DIR}/$*.tst ] || ${TEST_DIR}/$*.tst; then \
 		${BIN_DIR}/$(shell echo $* | sed -e 's/_[0-9]*$$//') \
@@ -144,7 +144,6 @@ ${OUTP_DIR}/%.out: ${TEST_DIR}/%.opt
 	-@test -f $@ || \
 	${BIN_DIR}/$(shell echo $* | sed -e 's/_[0-9]*$$//') \
 	    $(shell grep -v '^#' $<) \
-	    $< \
 	2>&1 \
 	| tee $@
 	-@touch $@
