@@ -90,8 +90,8 @@ do
     shift
 done
 
-echo 'files : '${FILES} 
-echo 'search terms : '${SEARCH_TERMS}
+echo 'files : '${FILES} >&2
+echo 'search terms : '${SEARCH_TERMS} >&2
 
 eval set -- "${FILES}"
 
@@ -125,7 +125,7 @@ else
 fi \
 | while read SEARCH_TERMS
 do
-    echo ${SEARCH_TERMS}
+    echo ${SEARCH_TERMS} >&2
 
     request=query="${SEARCH_TERMS}"
     queryURL="$serverURL/$resourcePATH?$request"
@@ -135,7 +135,7 @@ do
 
     if [ $HITCOUNT_ONLY = true ]
     then
-        echo -e $n"\t": ${SEARCH_TERMS}
+        echo -e $n"\t"${SEARCH_TERMS}
     else
         if [ $n -lt $pageSize ]
         then
