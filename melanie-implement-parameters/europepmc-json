@@ -94,8 +94,8 @@ do
     shift
 done
 
-echo 'files : '${FILES} >&2
-echo 'search terms : '${SEARCH_TERMS} >&2
+echo 'NOTE, files : '${FILES} >&2
+echo 'NOTE, search terms : '${SEARCH_TERMS} >&2
 
 eval set -- "${FILES}"
 
@@ -129,7 +129,7 @@ else
 fi \
 | while read SEARCH_TERMS
 do
-    echo ${SEARCH_TERMS} >&2
+    echo 'NOTE, search term :' ${SEARCH_TERMS} >&2
 
     request=query="${SEARCH_TERMS}"
     queryURL="$serverURL/$resourcePATH?$request"
@@ -144,11 +144,10 @@ do
         if [ $n -lt $pageSize ]
         then
             j=1
-        else
-            j=$(expr $n / $pageSize)    
+        else    
             if [ $(expr $n % $pageSize) -gt 0 ]
             then
-                j=$(expr $j + 1)
+                j=$(expr $n / $pageSize + 1)
             fi
         fi
         
