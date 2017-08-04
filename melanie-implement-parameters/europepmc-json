@@ -33,7 +33,7 @@ format=json
 #**   $0 --options 'search_term_1+search_term_2' files*.inp
 #**
 #** OPTIONS:
-#**  -n, --hit-count    Prints the number of results.
+#**  -c, --count-only   Prints the number of results.
 #**
 #**  --ps, --page-size '10'
 #**                     Modify the number of results per page (default is 1000).
@@ -59,31 +59,35 @@ do
                 }' $0
             exit
             ;;
-        -n)
+        -c|--count-only|--count-onl|--count-on|--count-o|--count|--coun|--cou| \
+        --co|--c)
             HITCOUNT_ONLY=true
             ;;
-        --options|--option)
-            echo "$0: '--options' is a place-holder; " \
-                 "please use '$0 --help' to get the list of available options."
-            exit 2
+        --options|--option|--optio|--opti|--opt|--op|--o)
+            echo "WARNING, $0: '--options' is a place-holder; " \
+                 "please use '$0 --help' to get the list of "\
+                 "available options." >&2
+            shift
             ;;
-        --ps|--page-size)
+        --ps|--page-size|--page-siz|--page-si|--page-s|--page|--pag|--pa|--p)
             pageSize="$2"
             shift
             ;;
-        --search-terms|--search-term|--search|--searc|--sear|--sea|--se|--s|-s)
+        -s|--search-terms|--search-term|--search-ter|--search-te|--search-t| \
+        --search|--searc|--sear|--sea|--se|--s)
             SEARCH_TERMS="$2"
             shift
             ;;
-        --url-encode|--URL|-U)
+        --url-encode|--url-encod|--url-enco|--url-enc|--url-en|--url-e|--url| \
+        --ur|--u|--URL|-U)
             URLENCODE=true
             ;;
         --version|--versio|--versi|--vers|--ver|--ve|--v)
             echo $INFO
             exit
             ;;
-        -*) echo "$0: unknown option '$1'" >&2
-            exit 1
+        -*) echo "WARNING, $0: unknown option '$1'" >&2
+            shift
             ;;
         *)  FILES="${FILES} '$1'" ;;
     esac
