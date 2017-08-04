@@ -144,10 +144,11 @@ do
         if [ $n -lt $pageSize ]
         then
             j=1
-        else    
+        else
+            j=$(expr $n / $pageSize)
             if [ $(expr $n % $pageSize) -gt 0 ]
             then
-                j=$(expr $n / $pageSize + 1)
+                j=$(expr $j + 1)
             fi
         fi
         
