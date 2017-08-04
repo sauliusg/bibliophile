@@ -1,0 +1,13 @@
+#! /bin/sh
+
+set -ue
+
+WEB_SITE=www.ebi.ac.uk
+
+if ping -c1 ${WEB_SITE} > /dev/null 2>&1
+then
+    exit 0
+else
+    echo "Test skipped: Web site \"${WEB_SITE}\" is not accessible."
+    exit 1
+fi
