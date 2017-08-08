@@ -65,7 +65,7 @@ do
             HITCOUNT_ONLY=true
             ;;
         --options|--option|--optio|--opti|--opt|--op|--o)
-            echo "WARNING, $0: '--options' is a place-holder; " \
+            echo "$0, WARNING : '--options' is a place-holder; " \
                  "please use '$0 --help' to get the list of "\
                  "available options." >&2
             ;;
@@ -89,15 +89,15 @@ do
             echo $INFO
             exit
             ;;
-        -*) echo "WARNING, $0: unknown option '$1'" >&2
+        -*) echo "$0, WARNING : unknown option '$1'" >&2
             ;;
         *)  FILES="${FILES} '$1'" ;;
     esac
     shift
 done
 
-echo 'NOTE, files : '${FILES} >&2
-echo 'NOTE, search terms : '${SEARCH_TERMS} >&2
+echo '$0, NOTE, files : '${FILES} >&2
+echo '$0, NOTE, search terms : '${SEARCH_TERMS} >&2
 
 eval set -- "${FILES}"
 
@@ -131,7 +131,7 @@ else
 fi \
 | while read SEARCH_TERMS
 do
-    echo 'NOTE, search term :' ${SEARCH_TERMS} >&2
+    echo '$0, NOTE, search term :' ${SEARCH_TERMS} >&2
 
     request=query="${SEARCH_TERMS}"
     queryURL="$serverURL/$resourcePATH?$request"
