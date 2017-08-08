@@ -1,4 +1,4 @@
-NOTE, files :  'tests/cases/europepmc-json_001.inp'
-NOTE, search terms : 
-NOTE, search term : (IND601309237+OR+IND601311758+OR+IND601311566+OR+IND601309362)
+./europepmc-json, NOTE, files :  'tests/cases/europepmc-json_001.inp'
+./europepmc-json, NOTE, search terms : 
+./europepmc-json, NOTE, search term : (IND601309237+OR+IND601311758+OR+IND601311566+OR+IND601309362)
 4	(IND601309237+OR+IND601311758+OR+IND601311566+OR+IND601309362)
