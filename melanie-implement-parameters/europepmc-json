@@ -39,6 +39,9 @@ script=""
 #**  --ps, --page-size '10'
 #**                     Modify the number of results per page (default is 1000).
 #**
+#**  --script           Prints out the command lines as comment without
+#**                     executing them.
+#**
 #**  -s, --search-terms 'crystal+structure'
 #**                     Add search terms (in quotes) as arguments after this
 #**                     option.
