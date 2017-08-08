@@ -8,15 +8,15 @@
 #*
 # This script is made to collect search results on europepmc website :
 # User enters the search terms as arguments of the script, using the option 
-# --search-terms, or writes them in a file (url encoded), given as an argument
-# as well. The script makes the query on the website and returns the results on
-# the standard output.
+# '--search-terms', or writes them in a file (url encoded beforehand, or using
+# '--url-encode' option), given as an argument as well. The script makes the
+# query on the website and returns the results on the standard output.
 #**
 TMP_DIR="${TMPDIR}"
 
 set -ue
 
-script() { echo "# $*"; cat; }
+script() { echo "# $*" >&2 ; }
 
 INFO='$Id$'
 FILES=""
@@ -28,6 +28,7 @@ serverURL=http://www.ebi.ac.uk
 resourcePATH=europepmc/webservices/rest/search
 pageSize=1000
 format=json
+script=""
 
 #** USAGE:
 #**   $0 --options 'search_term_1+search_term_2' files*.inp
@@ -67,11 +68,13 @@ do
             echo "WARNING, $0: '--options' is a place-holder; " \
                  "please use '$0 --help' to get the list of "\
                  "available options." >&2
-            shift
             ;;
         --ps|--page-size|--page-siz|--page-si|--page-s|--page|--pag|--pa|--p)
             pageSize="$2"
             shift
+            ;;
+        --script)
+            script=script
             ;;
         -s|--search-terms|--search-term|--search-ter|--search-te|--search-t| \
         --search|--searc|--sear|--sea|--se|--s)
@@ -87,7 +90,6 @@ do
             exit
             ;;
         -*) echo "WARNING, $0: unknown option '$1'" >&2
-            shift
             ;;
         *)  FILES="${FILES} '$1'" ;;
     esac
@@ -156,11 +158,14 @@ do
         cursorMark='*'
         for i in $(seq 1 $j) ;
         do
-            result="$(curl -sSL \
+            result="$($script curl -sSL \
             "$queryURL&cursorMark=$cursorMark&$options")"
-            echo "$result"
-            cursorMark=$(echo "$result" \
-               | jq . | awk '/nextCursorMark/{print $2}' | sed 's/[",]//g')
+            if [ "$script" = "" ]
+            then
+                echo "$result"
+                cursorMark=$(echo "$result" \
+                   | jq . | awk '/nextCursorMark/{print $2}' | sed 's/[",]//g')
+            fi
         done
     fi
 done
