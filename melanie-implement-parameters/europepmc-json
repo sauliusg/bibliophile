@@ -61,14 +61,14 @@ do
                     gsub("\\$0","'$(basename $0)'"); \
                     print $0
                 }' $0
-            exit
+            exit 0
             ;;
         -c|--count-only|--count-onl|--count-on|--count-o|--count|--coun|--cou| \
         --co|--c)
             HITCOUNT_ONLY=true
             ;;
         --options|--option|--optio|--opti|--opt|--op|--o)
-            echo "$0, WARNING : '--options' is a place-holder; " \
+            echo "$0: WARNING, '--options' is a place-holder; " \
                  "please use '$0 --help' to get the list of "\
                  "available options." >&2
             ;;
@@ -94,17 +94,19 @@ do
             ;;
         --version|--versio|--versi|--vers|--ver|--ve|--v)
             echo $INFO
-            exit
+            exit 0
             ;;
-        -*) echo "$0, WARNING : unknown option '$1'" >&2
+        -*) echo "$0: ERROR, unknown option '$1', "\
+            "please use '$0 --help' to get the list of available options." >&2
+            exit 1
             ;;
         *)  FILES="${FILES} '$1'" ;;
     esac
     shift
 done
 
-echo "$0, NOTE, files : "${FILES} >&2
-echo "$0, NOTE, search terms : "${SEARCH_TERMS} >&2
+echo "$0: NOTE, files : "${FILES} >&2
+echo "$0: NOTE, search terms : "${SEARCH_TERMS} >&2
 
 eval set -- "${FILES}"
 
@@ -138,7 +140,7 @@ else
 fi \
 | while read SEARCH_TERMS
 do
-    echo "$0, NOTE, search term :" ${SEARCH_TERMS} >&2
+    echo "$0: NOTE, search term :" ${SEARCH_TERMS} >&2
 
     if [[ "${SEARCH_TERMS}" = "* *" ]]
     then
