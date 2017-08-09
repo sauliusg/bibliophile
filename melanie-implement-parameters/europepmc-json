@@ -136,17 +136,33 @@ fi \
 do
     echo "$0, NOTE, search term :" ${SEARCH_TERMS} >&2
 
+    if [[ "${SEARCH_TERMS}" = "* *" ]]
+    then
+        echo "$0: WARNING, the search term '${SEARCH_TERMS}' contains" \
+             "spaces and will not work" >&2
+        echo "$0: WARNING, please URL-encode your search term or" \
+             "use '--url-encode' option" >&2
+        echo "$0: WARNING, will skip the '${SEARCH_TERMS}' search term" >&2
+        continue
+    fi
+    
     request=query="${SEARCH_TERMS}"
     queryURL="$serverURL/$resourcePATH?$request"
     result="$(curl -sSL "$queryURL&format=json&pageSize=1")"
 
     n=$(echo "$result" | jq . | awk '/hitCount/{print $2}' | sed 's/,//')
 
+    if [ -z "$n" ]
+    then
+        echo "$0: ERROR, could not determine the number of hits" >&2
+        exit 2
+    fi
+    
     if [ $HITCOUNT_ONLY = true ]
     then
         echo -e $n"\t"${SEARCH_TERMS}
     else
-        if [ $n -lt $pageSize ]
+        if [ "$n" -lt $pageSize ]
         then
             j=1
         else
