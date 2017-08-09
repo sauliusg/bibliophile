@@ -82,6 +82,10 @@ do
         -s|--search-terms|--search-term|--search-ter|--search-te|--search-t| \
         --search|--searc|--sear|--sea|--se|--s)
             SEARCH_TERMS="$2"
+            if [ -z "${SEARCH_TERMS}" ]
+            then
+                echo "$0: WARNING, search term is empty for '--search-term'" >&2
+            fi
             shift
             ;;
         --url-encode|--url-encod|--url-enco|--url-enc|--url-en|--url-e|--url| \
