@@ -89,7 +89,7 @@ do
             shift
             ;;
         --url-encode|--url-encod|--url-enco|--url-enc|--url-en|--url-e|--url| \
-        --ur|--u|--URL|-U)
+        --ur|--u|--URL|-U|--encode)
             URLENCODE=true
             ;;
         --version|--versio|--versi|--vers|--ver|--ve|--v)
