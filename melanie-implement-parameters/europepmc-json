@@ -142,7 +142,7 @@ fi \
 do
     echo "$0: NOTE, search term :" ${SEARCH_TERMS} >&2
 
-    if [[ "${SEARCH_TERMS}" = "* *" ]]
+    if [[ "${SEARCH_TERMS}" =~ \ |\' ]] 
     then
         echo "$0: WARNING, the search term '${SEARCH_TERMS}' contains" \
              "spaces and will not work" >&2
