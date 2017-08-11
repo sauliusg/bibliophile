@@ -1,6 +1,0 @@
-./europepmc-json: NOTE, files :  'tests/cases/europepmc-json_013.inp'
-./europepmc-json: NOTE, search terms : 
-./europepmc-json: NOTE, search term : IND601309237 OR IND601311758 OR IND601311566 OR IND601309362
-./europepmc-json: WARNING, the search term 'IND601309237 OR IND601311758 OR IND601311566 OR IND601309362' contains spaces and will not work
-./europepmc-json: WARNING, please URL-encode your search term or use '--url-encode' option
-./europepmc-json: WARNING, will skip the 'IND601309237 OR IND601311758 OR IND601311566 OR IND601309362' search term
