@@ -33,25 +33,24 @@ script=""
 req_hit=""
 
 #** USAGE:
-#**   $0 --options 'search_term_1+search_term_2' files*.inp
+#**   $0 --options files*.inp
+#**   $0 --search-terms 'search_term_1+search_term_2' files*.inp
 #**
 #** OPTIONS:
 #**  -c, --count-only   Prints the number of results.
 #**
-#**  -l, --limit '100'  Limit the number of pages (to 100 here, but can be
-#**                     changed).
+#**  -l, --limit 10     Limit the number of pages to 10.
 #**
-#**  --ps, --page-size '10'
+#**  -p, --page-size 10
 #**                     Modify the number of results per page (default is 1000).
 #**
 #**  --script           Prints out the command lines as comment without
 #**                     executing them.
 #**
 #**  -s, --search-terms 'crystal+structure'
-#**                     Add search terms (in quotes) as arguments after this
-#**                     option.
+#**                     Add search terms as arguments after this option.
 #**
-#**  -U, --url-encode   Url encode all search terms.
+#**  -U, --url-encode   URL-encode all search terms.
 #**
 #**  --version          Prints name, version, date and author of the script.
 #**
@@ -82,7 +81,7 @@ do
                  "please use '$0 --help' to get the list of "\
                  "available options." >&2
             ;;
-        --ps|--page-size|--page-siz|--page-si|--page-s|--page|--pag|--pa|--p)
+        -p|--page-size|--page-siz|--page-si|--page-s|--page|--pag|--pa|--p)
             pageSize="$2"
             shift
             ;;

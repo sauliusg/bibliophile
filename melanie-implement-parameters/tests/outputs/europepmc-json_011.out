@@ -6,25 +6,24 @@
  query on the website and returns the results on the standard output.
 
  USAGE:
-   europepmc-json --options 'search_term_1+search_term_2' files*.inp
+   europepmc-json --options files*.inp
+   europepmc-json --search-terms 'search_term_1+search_term_2' files*.inp
 
  OPTIONS:
   -c, --count-only   Prints the number of results.
 
-  -l, --limit '100'  Limit the number of pages (to 100 here, but can be
-                     changed).
+  -l, --limit 10     Limit the number of pages to 10.
 
-  --ps, --page-size '10'
+  -p, --page-size 10
                      Modify the number of results per page (default is 1000).
 
   --script           Prints out the command lines as comment without
                      executing them.
 
   -s, --search-terms 'crystal+structure'
-                     Add search terms (in quotes) as arguments after this
-                     option.
+                     Add search terms as arguments after this option.
 
-  -U, --url-encode   Url encode all search terms.
+  -U, --url-encode   URL-encode all search terms.
 
   --version          Prints name, version, date and author of the script.
 
