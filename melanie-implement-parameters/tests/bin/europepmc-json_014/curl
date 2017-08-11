@@ -1,0 +1,12 @@
+#! /bin/sh
+
+set -ue
+
+if ! echo "$@" | grep -q "crystal"
+then
+    exit
+fi
+
+cat <<'EOF'
+{"version":"5.2.1","hitCount":405004,"nextCursorMark":"AoIIQJFhHCgzNjY2OTM0Ng==","request":{"query":"crystal","resultType":"lite","synonym":false,"cursorMark":"*","pageSize":1,"sort":""},"resultList":{"result":[{"id":"28475387","source":"MED","pmid":"28475387","doi":"10.1080/10717544.2017.1321059","title":"Photonic crystal materials and their application in biomedicine.","authorString":"Chen H, Lou R, Chen Y, Chen L, Lu J, Dong Q.","journalTitle":"Drug Deliv","issue":"1","journalVolume":"24","pubYear":"2017","journalIssn":"1071-7544; 1521-0464; ","pageInfo":"775-780","pubType":"journal article","isOpenAccess":"N","inEPMC":"N","inPMC":"N","hasPDF":"N","hasBook":"N","citedByCount":0,"hasReferences":"N","hasTextMinedTerms":"N","hasDbCrossReferences":"N","hasLabsLinks":"N","hasTMAccessionNumbers":"N","firstPublicationDate":"2017-11-01"}]}}
+EOF

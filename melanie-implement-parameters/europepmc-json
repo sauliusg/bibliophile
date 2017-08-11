@@ -24,17 +24,22 @@ SEARCH_TERMS=""
 BASENAME="$(basename $0)"
 HITCOUNT_ONLY=false
 URLENCODE=false
+LIMIT=false
 serverURL=http://www.ebi.ac.uk
 resourcePATH=europepmc/webservices/rest/search
 pageSize=1000
 format=json
 script=""
+req_hit=""
 
 #** USAGE:
 #**   $0 --options 'search_term_1+search_term_2' files*.inp
 #**
 #** OPTIONS:
 #**  -c, --count-only   Prints the number of results.
+#**
+#**  -l, --limit '100'  Limit the number of pages (to 100 here, but can be
+#**                     changed).
 #**
 #**  --ps, --page-size '10'
 #**                     Modify the number of results per page (default is 1000).
@@ -66,6 +71,11 @@ do
         -c|--count-only|--count-onl|--count-on|--count-o|--count|--coun|--cou| \
         --co|--c)
             HITCOUNT_ONLY=true
+            ;;
+        -l|--limit|--limi|--lim|--li|--l)
+            LIMIT=true
+            req_pages="$2"
+            shift
             ;;
         --options|--option|--optio|--opti|--opt|--op|--o)
             echo "$0: WARNING, '--options' is a place-holder; " \
@@ -177,8 +187,16 @@ do
             then
                 j=$(expr $j + 1)
             fi
+            
+            if [ $LIMIT = true ]
+            then
+                if [ $j -gt $req_pages ]
+                then
+                    j=$req_pages
+                fi
+            fi
         fi
-        
+
         options="format=$format&pageSize=$pageSize"
         cursorMark='*'
         for i in $(seq 1 $j) ;

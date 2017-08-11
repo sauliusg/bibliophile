@@ -11,6 +11,9 @@
  OPTIONS:
   -c, --count-only   Prints the number of results.
 
+  -l, --limit '100'  Limit the number of pages (to 100 here, but can be
+                     changed).
+
   --ps, --page-size '10'
                      Modify the number of results per page (default is 1000).
 
