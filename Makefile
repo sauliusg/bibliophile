@@ -148,15 +148,6 @@ ${OUTP_DIR}/%.out: ${TEST_DIR}/%.opt
 	| tee $@
 	-@touch $@
 
-${OUTP_DIR}/%.out: ${TEST_DIR}/%.inp
-	-@test -f $@ || echo "$@:"
-	-@test -f $@ || \
-	${BIN_DIR}/$(shell echo $* | sed -e 's/_[0-9]*$$//') \
-	    $< \
-	2>&1 \
-	| tee $@
-	-@touch $@
-
 ${OUTP_DIR}/%.out: ${TEST_DIR}/%.sh
 	-@test -f $@ || echo "$@:"
 	-@test -f $@ || \
