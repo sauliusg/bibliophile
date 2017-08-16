@@ -39,6 +39,8 @@ req_hit=""
 #** OPTIONS:
 #**  -c, --count-only   Prints the number of results.
 #**
+#**  --json-output      Output results in JSON format.
+#**
 #**  -l, --limit 10     Limit the number of pages to 10.
 #**
 #**  -p, --page-size 10
@@ -53,6 +55,8 @@ req_hit=""
 #**  -U, --url-encode   URL-encode all search terms.
 #**
 #**  --version          Prints name, version, date and author of the script.
+#**
+#**  --xml-output       Output results in XML format.
 #**
 #**  --help             Prints short help message (this message) and exit.
 
@@ -70,6 +74,18 @@ do
         -c|--count-only|--count-onl|--count-on|--count-o|--count|--coun|--cou| \
         --co|--c)
             HITCOUNT_ONLY=true
+            ;;
+        --json-output|--json-outpu|--json-outp|--json-out|--json-ou|--json-o|\
+        --json|--jso|--js|--j)
+            format=json;
+            ;;
+        --xml-output|--xml-outpu|--xml-outp|--xml-out|--xml-ou|--xml-o|\
+        --xml|--xm|--x)
+            format=xml
+            ;;
+        --unknown-format)
+            # Just for debugging and testing:
+            format=xyz
             ;;
         -l|--limit|--limi|--lim|--li|--l)
             LIMIT=true
@@ -205,8 +221,22 @@ do
             if [ "$script" = "" ]
             then
                 echo "$result"
-                cursorMark=$(echo "$result" \
-                   | jq . | awk '/nextCursorMark/{print $2}' | sed 's/[",]//g')
+                if [ $format = "json" ]
+                then
+                    cursorMark=$(echo "$result" \
+                        | jq . \
+                        | awk '/nextCursorMark/{print $2}' \
+                        | sed 's/[",]//g')
+                elif [ $format = "xml" ]
+                then
+                    cursorMark=$(echo "$result" \
+                        | perl -077 -ne \
+                           'print $1
+                                if /<nextCursorMark>(.*?)<\/nextCursorMark>/ms')                    
+                else
+                    echo "$0: ERROR, unknown format '$format' requested" >&2
+                    exit 3
+                fi
             fi
         done
     fi
