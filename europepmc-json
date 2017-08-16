@@ -118,6 +118,7 @@ do
             URLENCODE=true
             ;;
         --version|--versio|--versi|--vers|--ver|--ve|--v)
+            echo bibliophile version $($(dirname $0)/bibliophile-version)
             echo $INFO
             exit 0
             ;;
