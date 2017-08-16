@@ -12,6 +12,8 @@
  OPTIONS:
   -c, --count-only   Prints the number of results.
 
+  --json-output      Output results in JSON format.
+
   -l, --limit 10     Limit the number of pages to 10.
 
   -p, --page-size 10
@@ -26,5 +28,7 @@
   -U, --url-encode   URL-encode all search terms.
 
   --version          Prints name, version, date and author of the script.
+
+  --xml-output       Output results in XML format.
 
   --help             Prints short help message (this message) and exit.
