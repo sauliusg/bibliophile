@@ -1,0 +1,4 @@
+./europepmc-json: NOTE, files : 
+./europepmc-json: NOTE, search terms : IND601309237
+./europepmc-json: NOTE, search term : IND601309237
+# curl -sSL http://www.ebi.ac.uk/europepmc/webservices/rest/search?query=IND601309237&cursorMark=*&format=json&pageSize=1000
