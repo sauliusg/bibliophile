@@ -32,6 +32,12 @@ format=json
 script=""
 req_hit=""
 
+case $0 in
+    *-xml)  format=xml ;;
+    *-json) format=json ;;
+    *)      format=unknown ;;
+esac
+
 #** USAGE:
 #**   $0 --options files*.inp
 #**   $0 --search-terms 'search_term_1+search_term_2' files*.inp
