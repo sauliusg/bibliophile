@@ -1,4 +1,4 @@
-bibliophile (unreleased)
+bibliophile (0.2.0)
 
   * Added:
     - option --progress : prints out dowloaded page number out of total for each
