@@ -25,6 +25,7 @@ BASENAME="$(basename $0)"
 HITCOUNT_ONLY=false
 URLENCODE=false
 LIMIT=false
+PROGRESS=false
 serverURL=http://www.ebi.ac.uk
 resourcePATH=europepmc/webservices/rest/search
 pageSize=1000
@@ -51,6 +52,8 @@ esac
 #**
 #**  -p, --page-size 10
 #**                     Modify the number of results per page (default is 1000).
+#**
+#**  --progress         Prints a progress indicator for each search term.
 #**
 #**  --script           Prints out the command lines as comment without
 #**                     executing them.
@@ -106,6 +109,9 @@ do
         -p|--page-size|--page-siz|--page-si|--page-s|--page|--pag|--pa|--p)
             pageSize="$2"
             shift
+            ;;
+        --progress|--progres|--progre|--progr|--prog|--pro|--pr)
+            PROGRESS=true
             ;;
         --script)
             script=script
@@ -228,6 +234,10 @@ do
             if [ "$script" = "" ]
             then
                 echo "$result"
+                if [ $PROGRESS = true ]
+                then
+                    echo "$0: NOTE, search term = ${SEARCH_TERMS} : page $i out of $j" >&2
+                fi
                 if [ $format = "json" ]
                 then
                     cursorMark=$(echo "$result" \

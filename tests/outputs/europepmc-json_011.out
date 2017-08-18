@@ -19,6 +19,8 @@
   -p, --page-size 10
                      Modify the number of results per page (default is 1000).
 
+  --progress         Prints a progress indicator for each search term.
+
   --script           Prints out the command lines as comment without
                      executing them.
 
