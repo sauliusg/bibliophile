@@ -1,7 +1,8 @@
-cod-tools (unreleased)
+bibliophile (unreleased)
 
   * Added:
-    - ...
+    - option --progress : prints out dowloaded page number out of total for each
+      search term.
 
 bibliophile (0.1.0)
 
