@@ -36,6 +36,9 @@
   --light            Light result type (default)
   --core             Core result type (contains references to OA texts)
 
+  Free text availability (possible values are 'y', 'n' and '' for 'any'):
+  --open-access y    Specify whether only OA papers should be returned
+
   --xml-output       Output results in XML format.
 
   --help             Prints short help message (this message) and exit.

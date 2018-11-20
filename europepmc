@@ -24,6 +24,7 @@ SEARCH_TERMS=""
 BASENAME="$(basename $0)"
 HITCOUNT_ONLY=false
 RESULT_TYPE=lite
+OPEN_ACCESS=''
 URLENCODE=false
 LIMIT=false
 PROGRESS=false
@@ -71,6 +72,9 @@ esac
 #**  --light            Light result type (default)
 #**  --core             Core result type (contains references to OA texts)
 #**
+#**  Free text availability (possible values are 'y', 'n' and '' for 'any'):
+#**  --open-access y    Specify whether only OA papers should be returned
+#**
 #**  --xml-output       Output results in XML format.
 #**
 #**  --help             Prints short help message (this message) and exit.
@@ -116,6 +120,19 @@ do
         --light|--ligh|--lig|--li|--l)
             RESULT_TYPE=light
             ;;
+        --open-access|--open-acces|--open-acce|--open-acc|--open-ac|--open-a|\
+        --open|--ope|--op|--o)
+            OPEN_ACCESS="$2"
+            if [ "${OPEN_ACCESS}" != 'y' -a \
+                 "${OPEN_ACCESS}" != 'n' -a \
+                 "${OPEN_ACCESS}" != '' ]
+            then
+                echo "$0: WARNING, value '${OPEN_ACCESS}' for the option " \
+                     "'--open-access' is not understood, switching to ''" >&2
+                OPEN_ACCESS=''
+            fi
+            shift
+            ;;
         --options|--option|--optio|--opti|--opt|--op|--o)
             echo "$0: WARNING, '--options' is a place-holder; " \
                  "please use '$0 --help' to get the list of "\
@@ -157,6 +174,13 @@ do
     esac
     shift
 done
+
+OA_OPTION=''
+
+if [ "${OPEN_ACCESS}" != "" ]
+then
+    OA_OPTION='+AND+is_open_access:'${OPEN_ACCESS}
+fi
 
 echo "$0: NOTE, files : "${FILES} >&2
 echo "$0: NOTE, search terms : "${SEARCH_TERMS} >&2
@@ -204,8 +228,8 @@ do
         echo "$0: WARNING, will skip the '${SEARCH_TERMS}' search term" >&2
         continue
     fi
-    
-    request=query="${SEARCH_TERMS}"
+
+    request=query="${SEARCH_TERMS}${OA_OPTION}"
     queryURL="$serverURL/$resourcePATH?$request"
     result="$(curl -sSL "$queryURL&format=json&pageSize=1")"
 
@@ -219,7 +243,7 @@ do
     
     if [ $HITCOUNT_ONLY = true ]
     then
-        echo -e $n"\t"${SEARCH_TERMS}
+        echo -e $n"\t"${request}
     else
         if [ "$n" -lt $pageSize ]
         then
@@ -251,7 +275,7 @@ do
                 echo "$result"
                 if [ $PROGRESS = true ]
                 then
-                    echo "$0: NOTE, search term = ${SEARCH_TERMS} : page $i out of $j" >&2
+                    echo "$0: NOTE, search term = ${request} : page $i out of $j" >&2
                 fi
                 if [ $format = "json" ]
                 then
