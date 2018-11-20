@@ -31,6 +31,11 @@
 
   --version          Prints name, version, date and author of the script.
 
+  Result types:
+  --idlist           Return only the list of identifiers
+  --light            Light result type (default)
+  --core             Core result type (contains references to OA texts)
+
   --xml-output       Output results in XML format.
 
   --help             Prints short help message (this message) and exit.

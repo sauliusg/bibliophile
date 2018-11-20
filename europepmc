@@ -23,6 +23,7 @@ FILES=""
 SEARCH_TERMS=""
 BASENAME="$(basename $0)"
 HITCOUNT_ONLY=false
+RESULT_TYPE=lite
 URLENCODE=false
 LIMIT=false
 PROGRESS=false
@@ -65,6 +66,11 @@ esac
 #**
 #**  --version          Prints name, version, date and author of the script.
 #**
+#**  Result types:
+#**  --idlist           Return only the list of identifiers
+#**  --light            Light result type (default)
+#**  --core             Core result type (contains references to OA texts)
+#**
 #**  --xml-output       Output results in XML format.
 #**
 #**  --help             Prints short help message (this message) and exit.
@@ -100,6 +106,15 @@ do
             LIMIT=true
             req_pages="$2"
             shift
+            ;;
+        --core|--cor|--co|--c)
+            RESULT_TYPE=core
+            ;;
+        --idlist|--idlis|--idli|--idl|--id|--i)
+            RESULT_TYPE=idlist
+            ;;
+        --light|--ligh|--lig|--li|--l)
+            RESULT_TYPE=light
             ;;
         --options|--option|--optio|--opti|--opt|--op|--o)
             echo "$0: WARNING, '--options' is a place-holder; " \
@@ -225,7 +240,7 @@ do
             fi
         fi
 
-        options="format=$format&pageSize=$pageSize"
+        options="format=$format&pageSize=$pageSize&resultType=$RESULT_TYPE"
         cursorMark='*'
         for i in $(seq 1 $j) ;
         do
