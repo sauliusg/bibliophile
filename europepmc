@@ -179,7 +179,7 @@ OA_OPTION=''
 
 if [ "${OPEN_ACCESS}" != "" ]
 then
-    OA_OPTION='+AND+is_open_access:'${OPEN_ACCESS}
+    OA_OPTION='+AND+open_access:'${OPEN_ACCESS}
 fi
 
 echo "$0: NOTE, files : "${FILES} >&2
